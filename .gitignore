@@ -4,3 +4,11 @@ __pycache__/
 *.so
 .Python
 venv/
+
+# SQLite databases (do not commit local data)
+db/*.db
+*.sqlite
+*.sqlite3
+*.db-journal
+*.db-shm
+*.db-wal
