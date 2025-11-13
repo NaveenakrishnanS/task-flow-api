@@ -6,7 +6,7 @@ from pydantic import BaseModel
 
 from enum import Enum
 
-from db.model.db_model import TaskTable
+from db.model.db_model import TaskTable, extract_enum_value
 
 
 class TaskStatus(Enum):
@@ -42,8 +42,8 @@ class Task(CreateTask):
             id=self.task_id,
             title=self.title,
             description=self.description,
-            status=self.status.value if isinstance(self.status, Enum) else self.status,
-            priority=self.priority.value if isinstance(self.priority, Enum) else self.priority,
+            status=extract_enum_value(self.status),
+            priority=extract_enum_value(self.priority),
             assignee=self.assignee if isinstance(self.assignee, str) else self.assignee.value,
             created_at=self.created_at,
             updated_at=self.updated_at,
@@ -66,8 +66,8 @@ class UpdateTask(BaseModel):
             id=existing_task.id,
             title=self.title if self.title is not None else existing_task.title,
             description=self.description if self.description is not None else existing_task.description,
-            status=self.status.value if isinstance(self.status, Enum) else (self.status if self.status is not None else existing_task.status),
-            priority=self.priority.value if isinstance(self.priority, Enum) else (self.priority if self.priority is not None else existing_task.priority),
+            status=extract_enum_value(self.status) if self.status is not None else existing_task.status,
+            priority=extract_enum_value(self.priority) if self.priority is not None else existing_task.priority,
             assignee=self.assignee if isinstance(self.assignee, str) else (self.assignee.value if self.assignee is not None else existing_task.assignee),
             created_at=existing_task.created_at,
             updated_at=datetime.now(),
